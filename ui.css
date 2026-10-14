@@ -1,0 +1,126 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  --muted: #888;
+  --border: #8884;
+  --error: #d33;
+  --accent: #c8501e;
+}
+body {
+  margin: 0;
+}
+h1 {
+  font-size: 18px;
+  margin: 0;
+}
+h2 {
+  font-size: 14px;
+  margin: 0 0 8px;
+}
+input,
+select,
+textarea,
+button {
+  font: inherit;
+}
+input:not([type='checkbox']),
+textarea {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  padding: 3px 5px;
+  min-width: 0;
+}
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+}
+input[type='checkbox'] {
+  accent-color: var(--accent);
+}
+.note,
+.empty {
+  color: var(--muted);
+  font-size: 12px;
+  margin: 4px 0;
+}
+.error {
+  color: var(--error);
+  font-size: 12px;
+  margin: 2px 0;
+}
+.card {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin: 0 0 12px;
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 0 12px;
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.row > select {
+  flex: 1;
+  min-width: 0;
+}
+.field {
+  margin: 0 0 10px;
+}
+.field-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: bold;
+  margin: 0 0 4px;
+}
+.disabled > :not(.field-title):not(.row),
+.disabled > .row > :not(input[type='checkbox']) {
+  opacity: 0.5;
+}
+.entry {
+  margin: 0 0 6px;
+}
+.entry .name-input {
+  width: 9em;
+}
+.entry .value-input {
+  flex: 1;
+}
+.locale-custom {
+  flex: 1;
+}
+.original,
+.preview {
+  color: var(--muted);
+  font-size: 11px;
+  margin: 2px 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.original .value {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+button.star,
+button.remove {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 15px;
+  padding: 0 2px;
+}
+button.star {
+  color: var(--accent);
+}
+button.add {
+  font-size: 12px;
+}
