@@ -90,6 +90,14 @@ test('activeLayers orders global first, then matching enabled rules in list orde
   assert.deepEqual(core.activeLayers(stateWith({ globalEnabled: false }), 'https://example.com/'), []);
 });
 
+test('layersBelow returns the active layers ranked under the given layer', () => {
+  const state = stateWith({ rules: [{ pattern: 'a' }, { pattern: 'a', enabled: false }, { pattern: 'a' }, { pattern: 'zzz' }] });
+  const below = (id) => core.layersBelow(state, 'https://a.test/', id).map((l) => l.id);
+  assert.deepEqual(below('global'), ['r0', 'r2']);
+  assert.deepEqual(below('r1'), ['r2']);
+  assert.deepEqual(below('r2'), []);
+});
+
 test('resolveLayers takes each field from the highest layer that sets it', () => {
   const state = stateWith({
     global: profile({ userAgent: { enabled: true, presetId: 'firefox-windows', value: '' }, cookies: [{ enabled: true, name: 'a', action: 'unset' }] }),

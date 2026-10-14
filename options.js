@@ -35,13 +35,6 @@ function setFavorites(favorites) {
   renderFavorites();
 }
 
-async function patternProblem(pattern) {
-  const error = PersonaCore.patternError(pattern);
-  if (error) return error;
-  const { isSupported, reason } = await chrome.declarativeNetRequest.isRegexSupported({ regex: pattern, isCaseSensitive: false });
-  return isSupported ? null : `Not supported by Chrome's regex engine (${reason})`;
-}
-
 function moveRule(index, delta) {
   const [rule] = state.rules.splice(index, 1);
   state.rules.splice(index + delta, 0, rule);

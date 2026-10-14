@@ -29,7 +29,7 @@ Persona Utils is a Manifest V3 Chrome extension written in plain JavaScript. The
 3. Enable "Developer mode"
 4. Click "Load unpacked" and select the cloned directory
 
-Open the extension's popup, check "User agent" under Global, and pick a preset such as "Safari / iPhone". Open `https://httpbin.org/headers`; the `User-Agent` it reports is the preset's string.
+Open the extension's popup, switch to the "Global" tab, check "User agent", and pick a preset such as "Safari / iPhone". Open `https://httpbin.org/headers`; the `User-Agent` it reports is the preset's string.
 
 To update, run `git pull` and click the reload button on the extension's card in `chrome://extensions/`.
 
@@ -37,7 +37,7 @@ To update, run `git pull` and click the reload button on the extension's card in
 
 ### Global settings and URL rules
 
-The popup edits the global settings, which apply to every page. The options page, opened from "Manage URL rules" in the popup, edits URL rules.
+The popup has a tab for each layer that applies to the current page: "Global", which applies to every page, and each URL rule that matches the page. The "+" tab adds a URL rule for the page's origin, such as `^https://example\.com/`, at the bottom of the list. The options page, opened from "Manage URL rules" in the popup, lists every URL rule and is where rules are reordered and deleted.
 
 A URL rule applies when its pattern matches the URL of the page in the tab. The pattern is a regular expression matched case-insensitively, and Chrome evaluates it with its RE2 engine, so lookaheads and backreferences are rejected when saving. Requests the page makes to other hosts, such as images from a CDN, receive the same rule, since matching is done on the page URL rather than on each request.
 
@@ -66,16 +66,16 @@ Cookie overrides leave the browser's cookie jar untouched. Persona Utils reads t
 Each level has its own switch:
 
 - "Enabled" at the top of the popup and the options page turns the whole extension off
-- The checkbox next to "Global" and next to each URL rule turns that layer off
+- The checkbox on each layer's tab in the popup, and next to each URL rule in the options page, turns that layer off
 - The checkbox on each item turns that item off
 
-The popup lists the URL rules that match the current page, each with its switch. The number on the extension's icon is the count of active layers on the tab.
+A layer can be switched from its tab's checkbox while another tab is open. The number on the extension's icon is the count of active layers on the tab.
 
 ### Original values
 
-Under every item, "Original" shows the value the item replaces and its source. In the popup, that is the value the matching URL rules would give, or the browser default. The options page edits rules without a page, so it shows the browser default.
+Under every item, "Original" shows the value the item replaces and its source. In the popup, that is the value the layers below the edited one would give on the current page, or the browser default. The options page edits rules without a page, so it shows the browser default.
 
-The popup's "On this page" lists the values in effect on the current tab and the layer each comes from.
+The popup's "On this page" tab lists the values in effect on the current tab and the layer each comes from.
 
 ## 🔒 Permissions
 
@@ -105,7 +105,7 @@ Chrome accepts `append` only for some request headers, such as `Accept`, `Accept
 
 ### Nothing changes on a page
 
-Chrome does not run extensions on `chrome://` pages or the Chrome Web Store. On other pages, check that "Enabled" is on and that the popup's "On this page" lists the item.
+Chrome does not run extensions on `chrome://` pages or the Chrome Web Store. On other pages, check that "Enabled" is on and that the popup's "On this page" tab lists the item.
 
 ## 🧪 Development
 

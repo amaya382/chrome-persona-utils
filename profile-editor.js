@@ -37,6 +37,13 @@ function computeBaseline(lowerLayers, browser) {
   };
 }
 
+async function patternProblem(pattern) {
+  const error = PersonaCore.patternError(pattern);
+  if (error) return error;
+  const { isSupported, reason } = await chrome.declarativeNetRequest.isRegexSupported({ regex: pattern, isCaseSensitive: false });
+  return isSupported ? null : `Not supported by Chrome's regex engine (${reason})`;
+}
+
 function originalLine(original) {
   return h('p', { className: 'original', title: original.label }, 'Original: ', h('span', { className: 'value' }, original.label), ` — ${original.source}`);
 }

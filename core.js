@@ -189,11 +189,18 @@
   function activeLayers(state, pageUrl) {
     if (!state.settings.enabled) return [];
     const layers = [];
-    if (state.global.enabled) layers.push({ source: 'Global', profile: state.global.profile });
+    if (state.global.enabled) layers.push({ id: 'global', source: 'Global', profile: state.global.profile });
     for (const rule of state.rules) {
-      if (rule.enabled && ruleMatches(rule, pageUrl)) layers.push({ source: `Rule: ${rule.name || rule.pattern}`, profile: rule.profile });
+      if (rule.enabled && ruleMatches(rule, pageUrl)) layers.push({ id: rule.id, source: `Rule: ${rule.name || rule.pattern}`, profile: rule.profile });
     }
     return layers;
+  }
+
+  // Active layers ranked below the layer `id` ('global' or a rule id), whether or not that layer is itself active.
+  function layersBelow(state, pageUrl, id) {
+    const order = ['global', ...state.rules.map((rule) => rule.id)];
+    const position = order.indexOf(id);
+    return activeLayers(state, pageUrl).filter((layer) => order.indexOf(layer.id) > position);
   }
 
   // Resolves each field to the value of the highest layer that sets it, tagged with that layer's source.
@@ -347,11 +354,13 @@
     patternError,
     ruleMatches,
     activeLayers,
+    layersBelow,
     resolveLayers,
     modifyHeadersAction,
     parseCookieHeader,
     serializeCookies,
     mergeCookies,
+    escapeRegExp,
     buildDnrRules,
   };
   root.PersonaCore = api;

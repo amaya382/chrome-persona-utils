@@ -9,6 +9,45 @@
         width: 460px;
         padding: 12px;
       }
+      .tabs {
+        display: flex;
+        gap: 2px;
+        overflow-x: auto;
+        border-bottom: 1px solid var(--border);
+        margin: 0 0 10px;
+      }
+      .tab {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex: none;
+        max-width: 150px;
+        padding: 5px 8px;
+        border: 1px solid transparent;
+        border-bottom: none;
+        border-radius: 6px 6px 0 0;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      .tab span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .tab.active {
+        border-color: var(--border);
+        font-weight: bold;
+      }
+      .tab.off span {
+        color: var(--muted);
+      }
+      .tab.add {
+        color: var(--accent);
+        font-weight: bold;
+      }
+      .tab.add[aria-disabled='true'] {
+        opacity: 0.4;
+        cursor: default;
+      }
       dl {
         display: grid;
         grid-template-columns: auto 1fr;
@@ -26,15 +65,18 @@
         color: var(--muted);
         font-size: 11px;
       }
-      #rules {
-        list-style: none;
-        margin: 0 0 8px;
-        padding: 0;
-      }
-      #rules label {
-        display: flex;
-        gap: 6px;
+      .rule-fields {
+        display: grid;
+        grid-template-columns: auto 1fr;
         align-items: center;
+        gap: 4px 8px;
+        margin: 0 0 10px;
+      }
+      .footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 10px;
       }
     </style>
   </head>
@@ -44,22 +86,12 @@
       <label class="row"><input type="checkbox" id="enabled" /> Enabled</label>
     </div>
     <p id="status" class="error" hidden></p>
-    <section class="card">
-      <h2>On this page</h2>
-      <dl id="effective"></dl>
-      <p class="note">Header changes apply to the next request. User agent, locale, and cookie overrides in JavaScript apply after a reload.</p>
+    <nav class="tabs" id="tabs" role="tablist"></nav>
+    <div id="panel"></div>
+    <div class="footer">
       <button type="button" id="reload">Reload page</button>
-    </section>
-    <section class="card">
-      <h2 class="row"><input type="checkbox" id="globalEnabled" /> Global</h2>
-      <p class="note">Applies to every page and takes priority over URL rules.</p>
-      <div id="globalEditor"></div>
-    </section>
-    <section class="card">
-      <h2>Matching URL rules</h2>
-      <ul id="rules"></ul>
       <a href="#" id="openOptions">Manage URL rules</a>
-    </section>
+    </div>
     <script src="presets.js"></script>
     <script src="core.js"></script>
     <script src="storage.js"></script>
