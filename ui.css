@@ -6,6 +6,10 @@
   --border: #8884;
   --error: #d33;
   --accent: #c8501e;
+  --global-fg: light-dark(#a8420f, #f29a6b);
+  --global-bg: light-dark(#fbe7dc, #4a2412);
+  --rule-fg: light-dark(#1f5fbf, #8ab4f8);
+  --rule-bg: light-dark(#e3edfb, #1c2f4d);
 }
 body {
   margin: 0;

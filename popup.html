@@ -6,64 +6,132 @@
     <link rel="stylesheet" href="ui.css" />
     <style>
       body {
-        width: 460px;
+        width: 480px;
         padding: 12px;
       }
-      .tabs {
-        display: flex;
-        gap: 2px;
-        overflow-x: auto;
-        border-bottom: 1px solid var(--border);
-        margin: 0 0 10px;
+      .summary {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: baseline;
+        gap: 3px 8px;
+        margin: 0;
       }
-      .tab {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        flex: none;
-        max-width: 150px;
-        padding: 5px 8px;
-        border: 1px solid transparent;
-        border-bottom: none;
-        border-radius: 6px 6px 0 0;
-        cursor: pointer;
+      .summary dt {
+        color: var(--muted);
+      }
+      .summary dd {
+        margin: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
         white-space: nowrap;
       }
-      .tab span {
+      .summary dd.value.default {
+        color: var(--muted);
+      }
+      .chip {
+        font-size: 11px;
+        padding: 0 6px;
+        border-radius: 8px;
+        white-space: nowrap;
+        max-width: 140px;
         overflow: hidden;
         text-overflow: ellipsis;
       }
-      .tab.active {
-        border-color: var(--border);
-        font-weight: bold;
+      .chip.global {
+        background: var(--global-bg);
+        color: var(--global-fg);
       }
-      .tab.off span {
+      .chip.rule {
+        background: var(--rule-bg);
+        color: var(--rule-fg);
+      }
+      .chip.default {
+        border: 1px solid var(--border);
         color: var(--muted);
       }
-      .tab.add {
-        color: var(--accent);
+      .segments {
+        display: flex;
+        margin: 0 0 10px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        overflow: hidden;
+      }
+      .segments button {
+        flex: 1;
+        padding: 6px;
+        border: none;
+        background: none;
+        cursor: pointer;
+      }
+      .segments button.active {
         font-weight: bold;
       }
-      .tab.add[aria-disabled='true'] {
-        opacity: 0.4;
-        cursor: default;
+      .segments button.active.global {
+        background: var(--global-bg);
+        color: var(--global-fg);
       }
-      dl {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        gap: 2px 10px;
+      .segments button.active.rules {
+        background: var(--rule-bg);
+        color: var(--rule-fg);
+      }
+      .layer-card {
+        border-left: 4px solid var(--global-fg);
+      }
+      .layer-card.rule {
+        border-left-color: var(--rule-fg);
+      }
+      .layer-card.inactive {
+        border-left-style: dashed;
+        background: repeating-linear-gradient(-45deg, transparent 0 8px, #8881 8px 16px);
+      }
+      .banner {
+        font-size: 12px;
+        padding: 4px 8px;
+        border-radius: 4px;
+        margin: 0 0 8px;
+        background: #8882;
+      }
+      .rule-list {
+        list-style: none;
+        padding: 0;
         margin: 0 0 8px;
       }
-      dt {
+      .rule-list li {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 6px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .rule-list li.selected {
+        outline: 1px solid var(--rule-fg);
+        background: var(--rule-bg);
+      }
+      .rule-list .name {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .rule-list li.not-applied .name {
         color: var(--muted);
       }
-      dd {
-        margin: 0;
-        overflow-wrap: anywhere;
+      .rule-list button {
+        padding: 0 5px;
       }
-      .source {
-        color: var(--muted);
+      .state {
         font-size: 11px;
+        white-space: nowrap;
+      }
+      .state.applied {
+        color: var(--rule-fg);
+      }
+      .state.not-applied {
+        color: var(--muted);
+      }
+      button.danger {
+        color: var(--error);
       }
       .rule-fields {
         display: grid;
@@ -72,11 +140,10 @@
         gap: 4px 8px;
         margin: 0 0 10px;
       }
-      .footer {
+      .actions {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-top: 10px;
+        gap: 6px;
+        margin: 0 0 12px;
       }
     </style>
   </head>
@@ -86,12 +153,14 @@
       <label class="row"><input type="checkbox" id="enabled" /> Enabled</label>
     </div>
     <p id="status" class="error" hidden></p>
-    <nav class="tabs" id="tabs" role="tablist"></nav>
-    <div id="panel"></div>
-    <div class="footer">
+    <section class="card">
+      <h2>Applied on this page</h2>
+      <dl class="summary" id="summary"></dl>
+      <p class="note">Header changes apply to the next request. JavaScript sees new values after a reload.</p>
       <button type="button" id="reload">Reload page</button>
-      <a href="#" id="openOptions">Manage URL rules</a>
-    </div>
+    </section>
+    <div class="segments" id="segments"></div>
+    <div id="layer"></div>
     <script src="presets.js"></script>
     <script src="core.js"></script>
     <script src="storage.js"></script>
